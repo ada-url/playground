@@ -3,6 +3,8 @@
 This repository contains a CPP and a JavaScript project
 to provide a playground for the Ada url parser.
 
+![screenshot](screenshot.png?raw=true 'Playground Screenshot')
+
 ### Installation
 
 #### cpp

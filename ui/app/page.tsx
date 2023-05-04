@@ -1,23 +1,27 @@
 'use client'
 
-import { Loader2 } from "lucide-react"
+import {Loader2, Terminal} from "lucide-react"
 import {useForm} from 'react-hook-form'
 import {useState} from "react";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {useToast} from "@/components/ui/use-toast";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import ParsingResult from "@/components/parsing-result";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://0.0.0.0:4242'
 
 export default function Home() {
-    const { toast } = useToast()
+    const {toast} = useToast()
     const [loading, setLoading] = useState(false)
-    const {handleSubmit, register } = useForm<{ url: string }>()
+    const {handleSubmit, register} = useForm<{ url: string }>()
     const [output, setOutput] = useState<Record<string, any> | undefined>()
     const onSubmit = handleSubmit(async (data) => {
         setLoading(true)
         try {
-            const response = await fetch(`${API_URL}/parse?url=${data.url}`, {
+            const search = new URLSearchParams()
+            search.set('url', data.url)
+            const response = await fetch(`${API_URL}/parse?${search.toString()}`, {
                 method: 'GET',
                 mode: 'cors',
                 headers: {
@@ -48,20 +52,16 @@ export default function Home() {
                     type='text'
                     required
                     placeholder='Please enter a valid URL to parse through Ada'
-                    {...register('url', { required: true })}
+                    {...register('url', {required: true})}
                 />
 
                 <Button disabled={loading} className='w-24'>
-                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
                     Parse it
                 </Button>
             </form>
 
-            {output !== undefined && (
-                <pre className='bg-neutral-900 rounded-sm text-neutral-200 p-4'>
-                    {JSON.stringify(output, null, 2)}
-                </pre>
-            )}
+            {output !== undefined && <ParsingResult {...output as any} />}
         </main>
     )
 }
