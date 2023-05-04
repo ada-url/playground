@@ -62,6 +62,10 @@ export default function Home() {
             </form>
 
             {output !== undefined && <ParsingResult {...output as any} />}
+
+            <footer className='text-sm'>
+                Ada is available through <a target='_blank' className='font-semibold underline' href="https://github.com/ada-url/ada">ada-url/ada github repository</a>.
+            </footer>
         </main>
     )
 }
