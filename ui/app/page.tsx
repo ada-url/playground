@@ -43,7 +43,7 @@ export default function Home() {
         }
     })
     return (
-        <main className='max-w-4xl mx-auto flex flex-col gap-y-8 my-12'>
+        <main className='max-w-4xl mx-auto flex flex-col gap-y-8 my-12 px-4 lg:px-0'>
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                 Ada URL Parser Playground
             </h1>
@@ -55,9 +55,9 @@ export default function Home() {
                     {...register('url', {required: true})}
                 />
 
-                <Button disabled={loading} className='w-24'>
+                <Button disabled={loading} className='w-32'>
                     {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
-                    Parse it
+                    Parse
                 </Button>
             </form>
 
