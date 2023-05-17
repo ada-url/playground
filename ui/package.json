@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "wasm": "cp ../cpp/build/playground.wasm wasm && cp ../cpp/build/playground.js wasm",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

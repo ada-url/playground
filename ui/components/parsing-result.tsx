@@ -13,7 +13,7 @@ type Props = {
         search_start: number
         username_end: number
     }
-    default: {
+    defaults: {
         omitted: number
     }
     href: string
@@ -28,7 +28,7 @@ function getDiagram(props: Props) {
         return null
     }
 
-    let {components, default: {omitted}, href} = props
+    let {components, defaults: {omitted}, href} = props
 
     let lines: string[][] = [
         props.href.split(''),
