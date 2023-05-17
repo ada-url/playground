@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "wasm": "cp ../cpp/build/playground.wasm wasm && cp ../cpp/build/playground.js wasm",
+    "wasm": "cd ../cpp && emcmake cmake -B build && cmake --build build && cp build/playground.wasm ../ui/wasm && cp build/playground.js ../ui/wasm",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
