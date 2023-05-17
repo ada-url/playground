@@ -151,6 +151,10 @@ export default function ParsingResult(props: Props) {
         </Alert>
     )
 
+    if (props.result !== 'success') {
+        return alert
+    }
+
     return (
         <>
             {alert}
