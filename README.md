@@ -12,7 +12,7 @@ to provide a playground for the Ada url parser.
 For installing and building, run  the following commands:
 
 - `cd cpp`
-- `cmake -B build`
+- `emcmake cmake -B build`
 - `cmake --build build`
 
 To run the server on port 4242:
@@ -29,7 +29,3 @@ For installing and building, run the following commands:
 To run the server on port 3000:
 
 - `npm run dev`
-
-To change the default API_URL, use the following command:
-
-- `NEXT_PUBLIC_API_URL=http://0.0.0.0:4242 npm run dev`

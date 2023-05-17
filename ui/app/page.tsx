@@ -1,15 +1,24 @@
 'use client'
 
-import {Loader2, Terminal} from "lucide-react"
+import {Loader2} from "lucide-react"
 import {useForm} from 'react-hook-form'
 import {useState} from "react";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {useToast} from "@/components/ui/use-toast";
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import ParsingResult from "@/components/parsing-result";
+import WASM from "@/wasm/playground.js"
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://0.0.0.0:4242'
+
+let wasm: { parse: (url: string) => Record<string, any> };
+
+function toJS(obj: Record<string, any>) {
+   const result: Record<string, any> = {};
+   for (const key of Object.keys(obj.__proto__)) {
+        result[key] = typeof obj[key] === "object" ? toJS(obj[key]) : obj[key];
+   }
+   return result;
+}
 
 export default function Home() {
     const {toast} = useToast()
@@ -19,16 +28,10 @@ export default function Home() {
     const onSubmit = handleSubmit(async (data) => {
         setLoading(true)
         try {
-            const search = new URLSearchParams()
-            search.set('url', data.url)
-            const response = await fetch(`${API_URL}/parse?${search.toString()}`, {
-                method: 'GET',
-                mode: 'cors',
-                headers: {
-                    'content-type': 'application/json',
-                }
-            })
-            setOutput(await response.json())
+            wasm = wasm ?? await WASM();
+            const result = wasm.parse(data.url);
+            setOutput(toJS(result));
+            result.delete();
         } catch (error) {
             if (error instanceof Error) {
                 toast({
