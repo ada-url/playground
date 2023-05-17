@@ -2,7 +2,7 @@
 
 import {Loader2} from "lucide-react"
 import {useForm} from 'react-hook-form'
-import {useState, useEffect} from "react";
+import {useState, useEffect, useCallback} from "react";
 import {useSearchParams, useRouter} from "next/navigation";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
@@ -29,7 +29,7 @@ export default function Home() {
     const [output, setOutput] = useState<Record<string, any> | undefined>()
     const searchParams = useSearchParams()
     const defaultValue = searchParams.get("url") ?? ""
-    const onSubmit = handleSubmit(async (data) => {
+    const onSubmit = useCallback(async (data: {url: string}) => {
         setLoading(true)
         try {
             wasm = wasm ?? await WASM();
@@ -49,20 +49,20 @@ export default function Home() {
         } finally {
             setLoading(false)
         }
-    })
+    }, [router, toast])
 
     useEffect(() => {
         if (defaultValue?.length > 0) {
             onSubmit({ url: defaultValue })
         }
-    }, [defaultValue])
+    }, [defaultValue, onSubmit])
 
     return (
         <main className='max-w-4xl mx-auto flex flex-col gap-y-8 my-12 px-4 lg:px-0'>
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
                 Ada URL Parser Playground
             </h1>
-            <form onSubmit={onSubmit} className='flex flex-row space-x-4'>
+            <form onSubmit={handleSubmit(onSubmit)} className='flex flex-row space-x-4'>
                 <Input
                     type='text'
                     required
