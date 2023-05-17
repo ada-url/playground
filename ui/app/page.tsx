@@ -2,7 +2,8 @@
 
 import {Loader2} from "lucide-react"
 import {useForm} from 'react-hook-form'
-import {useState} from "react";
+import {useState, useEffect} from "react";
+import {useSearchParams, useRouter} from "next/navigation";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import {useToast} from "@/components/ui/use-toast";
@@ -21,10 +22,13 @@ function toJS(obj: Record<string, any>) {
 }
 
 export default function Home() {
+    const router = useRouter()
     const {toast} = useToast()
     const [loading, setLoading] = useState(false)
     const {handleSubmit, register} = useForm<{ url: string }>()
     const [output, setOutput] = useState<Record<string, any> | undefined>()
+    const searchParams = useSearchParams()
+    const defaultValue = searchParams.get("url") ?? ""
     const onSubmit = handleSubmit(async (data) => {
         setLoading(true)
         try {
@@ -32,6 +36,7 @@ export default function Home() {
             const result = wasm.parse(data.url);
             setOutput(toJS(result));
             result.delete();
+            router.replace(`/?url=${data.url}`)
         } catch (error) {
             if (error instanceof Error) {
                 toast({
@@ -45,6 +50,13 @@ export default function Home() {
             setLoading(false)
         }
     })
+
+    useEffect(() => {
+        if (defaultValue?.length > 0) {
+            onSubmit({ url: defaultValue })
+        }
+    }, [defaultValue])
+
     return (
         <main className='max-w-4xl mx-auto flex flex-col gap-y-8 my-12 px-4 lg:px-0'>
             <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl">
@@ -55,6 +67,7 @@ export default function Home() {
                     type='text'
                     required
                     placeholder='Please enter a valid URL to parse through Ada'
+                    defaultValue={defaultValue}
                     {...register('url', {required: true})}
                 />
 
